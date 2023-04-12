@@ -1,45 +1,51 @@
 -- Напишите запросы, которые выводят следующую информацию:
 -- 1. заказы, отправленные в города, заканчивающиеся на 'burg'. Вывести без повторений две колонки (город, страна) (см. таблица orders, колонки ship_city, ship_country)
-select distinct ship_city, ship_country
-from orders
-where ship_city like '%burg'
+SELECT DISTINCT ship_city, ship_country
+FROM orders
+WHERE ship_city LIKE '%burg'
 
 -- 2. из таблицы orders идентификатор заказа, идентификатор заказчика, вес и страну отгрузки. Заказ отгружен в страны, начинающиеся на 'P'. Результат отсортирован по весу (по убыванию). Вывести первые 10 записей.
-select order_id, customer_id, freight, ship_country
-from orders
-where ship_country like 'P%'
-order by freight desc
-limit 10
+SELECT order_id, customer_id, freight, ship_country
+FROM orders
+WHERE ship_country LIKE 'P%'
+ORDER BY freight DESC
+LIMIT 10
 
 -- 3. фамилию и телефон сотрудников, у которых в данных отсутствует регион (см таблицу employees)
-select last_name, home_phone
-from employees
-where region is NULL
+SELECT last_name, home_phone
+FROM employees
+WHERE region IS NULL
 
 -- 4. количество поставщиков (suppliers) в каждой из стран. Результат отсортировать по убыванию количества поставщиков в стране
-select country, count(*)
-from suppliers
-group by country
-order by count(*) desc
+SELECT country, COUNT(*)
+FROM suppliers
+GROUP BY country
+ORDER BY COUNT(*) DESC
 
 -- 5. суммарный вес заказов (в которых известен регион) по странам, но вывести только те результаты, где суммарный вес на страну больше 2750. Отсортировать по убыванию суммарного веса (см таблицу orders, колонки ship_region, ship_country, freight)
-select sum(freight) as summ_of_freight, ship_country
-from orders
-where ship_region is not null
-group by ship_country
-having  sum(freight) > 2750
-order by sum(freight) desc
+SELECT SUM(freight) AS summ_of_freight, ship_country
+FROM orders
+WHERE ship_region IS NOT NULL
+GROUP BY ship_country
+HAVING  SUM(freight) > 2750
+ORDER BY SUM(freight) DESC
 
 -- 6. страны, в которых зарегистрированы и заказчики (customers) и поставщики (suppliers) и работники (employees).
-select country from customers
-union
-select country from suppliers
-union
-select country from employees
+SELECT country
+FROM customers
+INTERSECT
+SELECT country
+FROM suppliers
+INTERSECT
+SELECT country
+FROM employees
 
 -- 7. страны, в которых зарегистрированы и заказчики (customers) и поставщики (suppliers), но не зарегистрированы работники (employees).
-select country from customers
-union
-select country from suppliers
-except
-select country from employees
+SELECT country
+FROM customers
+INTERSECT
+SELECT country
+FROM suppliers
+EXCEPT
+SELECT country
+FROM employees
